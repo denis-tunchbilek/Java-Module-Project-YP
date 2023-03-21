@@ -1,73 +1,99 @@
 import java.util.Scanner;
 
+class Calculater {
+    String names = "Добавленные товары:";
+    int count;
+    double result;
+    String resultStr;
+    double sum = 0;
 
-public class Main {
-    public static class Calculater {
-        String names = "Добавленные товары:";
-        double sum = 0;
-        void add(double price, String name){
-            names = names + "\n" + name;
-            sum += price;
+    void add(double price, String name) {
+        names = names + "\n" + name;
+        sum += price;
+    }
+
+    void getResult() {
+        result = sum / count;
+
+    }
+
+    void resultReformString() {
+        resultStr = String.format("%.2f", result);
+    }
+}
+
+class Formatter {
+    String wordForm = "";
+
+    void reform(double price) {
+        if (price >= 11 & price <= 19) {
+            wordForm = "рублей";
+        } else {
+            int ostatok = (int) Math.floor(price % 10);
+            if (ostatok == 1) {
+                wordForm = "рубль";
+            } else if (ostatok >= 2 & ostatok <= 4) {
+                wordForm = "рубля";
+            } else if (ostatok >= 5 & ostatok <= 9 | ostatok == 0) {
+                wordForm = "рублей";
+
+            }
         }
     }
+}
+
+
+public class Main {
 
 
     public static void main(String[] args) {
         String trash;
         Calculater calculate = new Calculater();
+        Formatter format = new Formatter();
         Scanner scanner = new Scanner(System.in);
-        int count = 0;
+        System.out.println("Введите количество посетителей:");
         while (true) {
 
-            while (!scanner.hasNextInt()){
-                trash = scanner.nextLine();
+            if (!scanner.hasNextInt()) {
                 System.out.println("Это не число, попробуйте еще раз:");
-            }
-            count = scanner.nextInt();
-            if (count < 1){
-                System.out.println("Вы ввели некоректное количество человек, попробуйте ещё раз:");
-            }else{
-                break;
-            }
+                scanner.nextLine();
+            } else {
+                calculate.count = scanner.nextInt();
+                if (calculate.count < 1) {
+                    System.out.println("Вы ввели некоректное количество человек, попробуйте ещё раз:");
+                } else {
+                    break;
+                }
 
 
+            }
         }
         String end = "";
-        while (!end.equalsIgnoreCase("завершить")){
+        while (!end.equalsIgnoreCase("завершить")) {
             System.out.println("Введите название и  стоимость товара");
-            trash = scanner.nextLine();
-            String name = scanner.nextLine();
+            String name = scanner.next();
             double price;
             while (true) {
-                while (!scanner.hasNextDouble()){
-                    trash = scanner.nextLine();
+                while (!scanner.hasNextDouble()) {
                     System.out.println("Это не число с плавующией точкой, попробуйте еще раз:");
+                    trash = scanner.next();
                 }
                 price = scanner.nextDouble();
-                if (price < 0){
+                if (price < 0) {
                     System.out.println("Цена не может быть отрицательной попробуйте ещё раз:");
-                }else{
+                } else {
                     break;
                 }
             }
             calculate.add(price, name);
-            System.out.println("Хотели бы вы добавить еще товар если нет напишите 'Завершить':");
-            trash = scanner.nextLine();
-            end = scanner.nextLine();
-        }
-        calculate.sum = calculate.sum / count;
-        String resultSum = String.format("%.2f", calculate.sum);
-        String wordForm = "";
-        if (calculate.sum < 2){
-            wordForm = "рубль";
-
-        } else if (calculate.sum < 5) {
-            wordForm = "рубля";
-        }else {
-            wordForm = "рублей";
+            System.out.println("Хотели бы вы добавить еще товар? Введите любой символ для продолжения. Если нет, напишите 'Завершить':");
+            end = scanner.next();
         }
         System.out.println(calculate.names);
-        System.out.println("Каждый человек должен заплатить" + resultSum + wordForm);
+        calculate.getResult();
+        calculate.resultReformString();
+        format.reform(calculate.result);
+        System.out.println("Каждый человек должен заплатить" + calculate.resultStr + format.wordForm);
         // ваш код начнется здесь
         // вы не должы ограничиваться только классом Main и можете создавать свои классы по необходимости
 
